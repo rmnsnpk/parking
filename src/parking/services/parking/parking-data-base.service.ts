@@ -17,7 +17,7 @@ export class ParkingDataBaseService {
     }
   }
 
-  public create(license: string): Observable<ParkingSlotDto[]> {
+  public create(license: string): Observable<ParkingSlotDto> {
     for (let i = 0; i < this.data.length; i++) {
       if (this.data[i].isEmpty) {
         this.data[i] = {
@@ -25,36 +25,35 @@ export class ParkingDataBaseService {
           slotNumber: i,
           isEmpty: false,
         };
-        return of([this.data[i]]);
+        return of(this.data[i]);
       }
     }
-    return of([]);
+    return of(null);
   }
 
-  public findById(id: number): Observable<ParkingSlotDto[]> {
+  public findById(id: number): Observable<ParkingSlotDto> {
     if (id > 0 && id < this.data.length) {
-      return of([this.data[id]]);
+      return of(this.data[id]);
     }
-    return of([]);
+    return of(null);
   }
 
-  public findByLicense(license: string): Observable<ParkingSlotDto[]> {
-    return of(
-      this.data.filter((slotInfo) => {
-        if (slotInfo.license === license) {
-          return slotInfo;
-        }
-      }),
-    );
+  public findOne(license: string): Observable<ParkingSlotDto> {
+    for (const slot of this.data) {
+      if (slot.license === license) {
+        return of(slot);
+      }
+    }
+    return of(null);
   }
 
-  public delete(id: number): Observable<ParkingSlotDto[]> {
+  public delete(id: number): Observable<ParkingSlotDto> {
     if (id > 0 || id < this.data.length) {
       const deletedData = { ...this.data[id], isEmpty: true };
       this.data[id].license = null;
       this.data[id].isEmpty = true;
-      return of([deletedData]);
+      return of(deletedData);
     }
-    return of([]);
+    return of(null);
   }
 }
