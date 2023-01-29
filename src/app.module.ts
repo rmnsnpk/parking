@@ -4,8 +4,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { ParkingModule } from './parking/parking.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { ParkingModule } from './modules/parking/parking.module';
 
 @Module({
   imports: [

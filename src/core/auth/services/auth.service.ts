@@ -3,11 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 
 import * as bcryptjs from 'bcryptjs';
 import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
-import { jwtConstants } from 'src/auth/constants/auth.constants';
-import { JwtMessage } from 'src/auth/dto/jwt-message.dto';
-import { UnverifiedUserDto } from 'src/user/dto/unverified-user.dto';
-import { UserDto } from 'src/user/dto/user.dto';
-import { UserService } from 'src/user/services/user.service';
+import { jwtConstants } from 'src/core/auth/constants/auth.constants';
+
+import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
+import { UserDto } from 'src/modules/user/dto/user.dto';
+import { UserService } from 'src/modules/user/services/user.service';
+import { JwtMessage } from '../dto/jwt-message.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,21 +18,21 @@ export class AuthService {
   ) {}
 
   private validateUser(
-    loginUser: UnverifiedUserDto,
+    loginUser: CreateUserDto,
   ): Observable<UserDto | boolean> {
-    return this.userService.getUserByUsername(loginUser.name).pipe(
+    return this.userService.getUserByName(loginUser.name).pipe(
       switchMap((user) => {
-        if (user) {
-          return from(bcryptjs.compare(loginUser.password, user.password)).pipe(
-            map((isUserValidated) => {
-              if (isUserValidated) {
-                return user as UserDto;
-              }
-              return false;
-            }),
-          );
+        if (!user) {
+          return of(false);
         }
-        return of(false);
+        return from(bcryptjs.compare(loginUser.password, user.password)).pipe(
+          map((isUserValidated) => {
+            if (isUserValidated) {
+              return user as UserDto;
+            }
+            return false;
+          }),
+        );
       }),
 
       catchError(() => {
@@ -39,10 +40,12 @@ export class AuthService {
       }),
     );
   }
-  public login(user: UnverifiedUserDto): Observable<JwtMessage> {
+  public login(user: CreateUserDto): Observable<JwtMessage> {
     return this.validateUser(user).pipe(
       map((validatedUser) => {
-        if (validatedUser) {
+        if (!validatedUser) {
+          throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        } else {
           return {
             accessToken: this.jwtService.sign(
               { name: this.validateUser.name },
@@ -50,27 +53,22 @@ export class AuthService {
             ),
             expiresIn: jwtConstants.expiresIn,
           };
-        } else {
-          throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
       }),
     );
   }
 
-  public signUp(user: UnverifiedUserDto): Observable<JwtMessage> {
+  public signUp(user: CreateUserDto): Observable<JwtMessage> {
     return from(bcryptjs.hash(user.password, 10)).pipe(
       map((hashedPassword) => {
         return {
           name: user.name,
           password: hashedPassword,
-        } as UserDto;
+        } as CreateUserDto;
       }),
       switchMap((user) => {
-        return this.userService.createNewUser(user).pipe(
+        return this.userService.create(user).pipe(
           map((user) => {
-            if (!user) {
-              throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-            }
             return {
               accessToken: this.jwtService.sign(
                 { name: user.name },

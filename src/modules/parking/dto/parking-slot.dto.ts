@@ -1,5 +1,5 @@
 export class ParkingSlotDto {
-  license: string;
+  license: string | null;
   slotNumber: number;
   isEmpty: boolean;
 }
