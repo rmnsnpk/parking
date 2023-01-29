@@ -13,6 +13,6 @@ export class AuthController {
 
   @Post('signup')
   signUp(@Body() user: UnverifiedUserDto) {
-    return this.authService.authNewUser(user);
+    return this.authService.signUp(user);
   }
 }

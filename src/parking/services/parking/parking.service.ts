@@ -17,24 +17,21 @@ export class ParkingService {
   }
 
   public park(license: string): Observable<ParkingSlotDto> {
-    if (typeof license === 'string') {
-      return this.db.findOne(license).pipe(
-        switchMap((parkingInfo) => {
-          if (parkingInfo === null) {
-            return this.db.create(license).pipe(
-              map((parkingInfo) => {
-                if (parkingInfo === null) {
-                  throw new HttpException('Can not park', HttpStatus.CONFLICT);
-                }
-                return parkingInfo;
-              }),
-            );
-          }
-          throw new HttpException('Already parked', HttpStatus.CONFLICT);
-        }),
-      );
-    }
-    throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    return this.db.findOne(license).pipe(
+      switchMap((parkingInfo) => {
+        if (parkingInfo === null) {
+          return this.db.create(license).pipe(
+            map((parkingInfo) => {
+              if (parkingInfo === null) {
+                throw new HttpException('Can not park', HttpStatus.CONFLICT);
+              }
+              return parkingInfo;
+            }),
+          );
+        }
+        throw new HttpException('Already parked', HttpStatus.CONFLICT);
+      }),
+    );
   }
 
   public getSlotInfo(id: string): Observable<SlotInfoDto> {

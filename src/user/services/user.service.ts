@@ -15,7 +15,7 @@ export class UserService {
   public createNewUser(user: UnverifiedUserDto): Observable<UserDto> {
     return this.db.findOne(user.name).pipe(
       switchMap((userFromDb) => {
-        if (userFromDb == null) {
+        if (userFromDb === null) {
           return this.db.create(user);
         }
         throw new HttpException('User already exists', HttpStatus.CONFLICT);

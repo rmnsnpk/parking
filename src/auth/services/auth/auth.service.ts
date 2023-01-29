@@ -57,7 +57,7 @@ export class AuthService {
     );
   }
 
-  public authNewUser(user: UnverifiedUserDto) {
+  public signUp(user: UnverifiedUserDto): Observable<JwtMessage> {
     return from(bcryptjs.hash(user.password, 10)).pipe(
       map((hashedPassword) => {
         return {
@@ -68,17 +68,16 @@ export class AuthService {
       switchMap((user) => {
         return this.userService.createNewUser(user).pipe(
           map((user) => {
-            if (user) {
-              return {
-                accessToken: this.jwtService.sign(
-                  { name: user.name },
-                  { expiresIn: jwtConstants.expiresIn },
-                ),
-                expiresIn: jwtConstants.expiresIn,
-              };
-            } else {
+            if (!user) {
               throw new HttpException('User not found', HttpStatus.NOT_FOUND);
             }
+            return {
+              accessToken: this.jwtService.sign(
+                { name: user.name },
+                { expiresIn: jwtConstants.expiresIn },
+              ),
+              expiresIn: jwtConstants.expiresIn,
+            };
           }),
         );
       }),

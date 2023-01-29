@@ -23,7 +23,7 @@ export class ParkingController {
 
   @UseGuards(JwtAuthGuard)
   @Get('slot:slotId')
-  getSlotInf(@Param('slotId') slotId: string) {
+  getSlotInfo(@Param('slotId') slotId: string) {
     return this.parkingService.getSlotInfo(slotId);
   }
 
