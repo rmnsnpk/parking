@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { map, Observable, switchMap } from 'rxjs';
 import { ParkingSlotDto } from '../../dto/parking-slot.dto';
 import { SlotInfoDto, SlotInfoEmptyDto } from '../../dto/slot-info.dto';
@@ -7,11 +8,14 @@ import { ParkingDataBaseService } from './parking-data-base.service';
 
 @Injectable()
 export class ParkingService {
-  constructor(private db: ParkingDataBaseService) {}
+  constructor(
+    private db: ParkingDataBaseService,
+    private configService: ConfigService,
+  ) {}
 
   onModuleInit() {
     const defaultValues = this.getDefaultValues(
-      process.env.PARKING_SIZE || '5',
+      this.configService.get('PARKING_SIZE') || 5,
     );
     this.db.setDefaultValues(defaultValues);
   }
@@ -89,9 +93,9 @@ export class ParkingService {
     };
   }
 
-  private getDefaultValues(size: string): ParkingSlotDto[] {
+  private getDefaultValues(size: number): ParkingSlotDto[] {
     const defaultValues: ParkingSlotDto[] = [];
-    for (let i = 1; i <= +size; i++) {
+    for (let i = 1; i <= size; i++) {
       defaultValues.push({
         slotNumber: i,
         license: null,

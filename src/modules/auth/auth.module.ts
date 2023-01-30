@@ -5,7 +5,7 @@ import { JwtStrategy } from 'src/core/auth/jwt.strategy';
 import { AuthService } from 'src/core/auth/services/auth.service';
 
 import { UserModule } from '../user/user.module';
-import { jwtConstants } from '../../core/auth/constants/auth.constants';
+import { JWT_CONSTANTS } from '../../core/auth/constants/auth.constants';
 import { AuthController } from './controllers/auth/auth.controller';
 
 @Module({
@@ -13,8 +13,8 @@ import { AuthController } from './controllers/auth/auth.controller';
     UserModule,
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
+      secret: JWT_CONSTANTS.secret,
+      signOptions: { expiresIn: JWT_CONSTANTS.expiresIn },
     }),
   ],
   controllers: [AuthController],

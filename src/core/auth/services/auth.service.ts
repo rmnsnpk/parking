@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import * as bcryptjs from 'bcryptjs';
 import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
-import { jwtConstants } from '../constants/auth.constants';
+import { JWT_CONSTANTS } from '../constants/auth.constants';
 
 import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
 import { UserDto } from 'src/modules/user/dto/user.dto';
@@ -17,30 +17,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  private validateUser(
-    loginUser: CreateUserDto,
-  ): Observable<UserDto | boolean> {
-    return this.userService.getUserByName(loginUser.name).pipe(
-      switchMap((user) => {
-        if (!user) {
-          return of(false);
-        }
-        return from(bcryptjs.compare(loginUser.password, user.password)).pipe(
-          map((isUserValidated) => {
-            if (isUserValidated) {
-              return user as UserDto;
-            }
-            return false;
-          }),
-        );
-      }),
-
-      catchError(() => {
-        return of(false);
-      }),
-    );
-  }
-
   public login(user: CreateUserDto): Observable<JwtMessage> {
     return this.validateUser(user).pipe(
       map((validatedUser) => {
@@ -50,9 +26,9 @@ export class AuthService {
           return {
             accessToken: this.jwtService.sign(
               { name: user.name },
-              { expiresIn: jwtConstants.expiresIn },
+              { expiresIn: JWT_CONSTANTS.expiresIn },
             ),
-            expiresIn: jwtConstants.expiresIn,
+            expiresIn: JWT_CONSTANTS.expiresIn,
           };
         }
       }),
@@ -73,13 +49,31 @@ export class AuthService {
             return {
               accessToken: this.jwtService.sign(
                 { name: user.name },
-                { expiresIn: jwtConstants.expiresIn },
+                { expiresIn: JWT_CONSTANTS.expiresIn },
               ),
-              expiresIn: jwtConstants.expiresIn,
+              expiresIn: JWT_CONSTANTS.expiresIn,
             };
           }),
         );
       }),
+    );
+  }
+
+  private validateUser(
+    loginUser: CreateUserDto,
+  ): Observable<UserDto | boolean> {
+    return this.userService.getUserByName(loginUser.name).pipe(
+      switchMap((user) =>
+        from(bcryptjs.compare(loginUser.password, user.password)).pipe(
+          map((isUserValidated: boolean) => {
+            if (isUserValidated) {
+              return user as UserDto;
+            }
+            return false;
+          }),
+        ),
+      ),
+      catchError(() => of(false)),
     );
   }
 }

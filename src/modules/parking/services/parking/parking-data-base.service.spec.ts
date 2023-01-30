@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { fakeParkingSlot } from '../../../../../test/constants/testing.constants';
+import { fakeParkingSlot } from '../../../../../test/mocks/parking/parking.mocks';
 import { ParkingDBKeys } from '../../enums/parking.enum';
 import { ParkingDataBaseService } from './parking-data-base.service';
 

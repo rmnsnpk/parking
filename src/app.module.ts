@@ -9,10 +9,7 @@ import { ParkingModule } from './modules/parking/parking.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
+    ConfigModule.forRoot({}),
     ParkingModule,
     AuthModule,
     ThrottlerModule.forRoot({

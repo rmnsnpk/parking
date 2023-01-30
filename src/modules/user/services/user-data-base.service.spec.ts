@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { fakeCreateUserWithHashedPassword } from '../../../../test/constants/testing.constants';
+import { fakeCreateUserWithHashedPassword } from '../../../../test/mocks/user/user.mocks';
 import { UserDataBaseService } from './user-data-base.service';
 
 describe('UserDataBaseService', () => {

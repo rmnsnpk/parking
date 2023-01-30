@@ -4,7 +4,7 @@ import {
   fakeLicense,
   fakeParkingSlot,
   fakeSlotInfo,
-} from '../../../../../test/constants/testing.constants';
+} from '../../../../../test/mocks/parking/parking.mocks';
 import { ParkingService } from '../../services/parking/parking.service';
 import { ParkingController } from './parking.controller';
 

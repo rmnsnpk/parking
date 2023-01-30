@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
-import {
-  fakeJwtMessage,
-  fakeCreateUser,
-} from '../../../../../test/constants/testing.constants';
+import { fakeJwtMessage } from '../../../../../test/mocks/auth/auth.mocks';
+import { fakeCreateUser } from '../../../../../test/mocks/user/user.mocks';
+
 import { AuthService } from '../../../../core/auth/services/auth.service';
 import { AuthController } from './auth.controller';
 
