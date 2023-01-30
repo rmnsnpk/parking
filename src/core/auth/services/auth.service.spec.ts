@@ -1,12 +1,11 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { of } from 'rxjs';
-import { UserService } from '../../../modules/user/services/user.service';
 import {
-  fakeCreateUser,
   fakeJwtMessage,
   fakeUserWithHashedPassword,
 } from '../../../../test/constants/testing.constants';
+import { UserService } from '../../../modules/user/services/user.service';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
