@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { map, Observable, take } from 'rxjs';
-import { DataBase } from 'src/core/db/db';
+import { DataBase } from '../../../core/db/db';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserDto } from '../dto/user.dto';
 

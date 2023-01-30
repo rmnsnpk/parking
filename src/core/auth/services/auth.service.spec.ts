@@ -1,12 +1,38 @@
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { of } from 'rxjs';
+import { UserService } from '../../../modules/user/services/user.service';
+import {
+  fakeCreateUser,
+  fakeJwtMessage,
+  fakeUserWithHashedPassword,
+} from '../../../../test/constants/testing.constants';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let service: AuthService;
+  const mockUserService = {
+    getUserByName: jest.fn(() => of(fakeUserWithHashedPassword)),
+    create: jest.fn(() => of(fakeUserWithHashedPassword)),
+  };
+  const mockJwtService = {
+    sign: jest.fn(({}, {}) => of(fakeJwtMessage.accessToken)),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
+      providers: [
+        AuthService,
+        {
+          provide: UserService,
+          useValue: mockUserService,
+        },
+        {
+          provide: JwtService,
+          useValue: mockJwtService,
+        },
+        JwtService,
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);

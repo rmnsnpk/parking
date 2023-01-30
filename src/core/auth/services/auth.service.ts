@@ -3,11 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 
 import * as bcryptjs from 'bcryptjs';
 import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
-import { jwtConstants } from 'src/core/auth/constants/auth.constants';
+import { jwtConstants } from '../constants/auth.constants';
 
 import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
 import { UserDto } from 'src/modules/user/dto/user.dto';
-import { UserService } from 'src/modules/user/services/user.service';
+import { UserService } from '../../../modules/user/services/user.service';
 import { JwtMessage } from '../dto/jwt-message.dto';
 
 @Injectable()
@@ -40,6 +40,7 @@ export class AuthService {
       }),
     );
   }
+
   public login(user: CreateUserDto): Observable<JwtMessage> {
     return this.validateUser(user).pipe(
       map((validatedUser) => {
@@ -48,7 +49,7 @@ export class AuthService {
         } else {
           return {
             accessToken: this.jwtService.sign(
-              { name: this.validateUser.name },
+              { name: user.name },
               { expiresIn: jwtConstants.expiresIn },
             ),
             expiresIn: jwtConstants.expiresIn,

@@ -10,7 +10,6 @@ export abstract class DataBase<T> {
     return this.data$.pipe(
       take(1),
       map((data) => {
-        console.log(data);
         const foundItem = data.find((item) => item[key] === value);
         return foundItem ? foundItem : null;
       }),

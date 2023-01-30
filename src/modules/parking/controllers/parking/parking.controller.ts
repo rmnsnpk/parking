@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { JwtAuthGuard } from 'src/core/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../../core/auth/jwt-auth.guard';
 import { LicenseDto } from '../../dto/license.dto';
 import { ParkingSlotDto } from '../../dto/parking-slot.dto';
 import { SlotInfoDto, SlotInfoEmptyDto } from '../../dto/slot-info.dto';

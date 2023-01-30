@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { map, Observable, take } from 'rxjs';
-import { DataBase } from 'src/core/db/db';
+import { DataBase } from '../../../../core/db/db';
 import { ParkingSlotDto } from '../../dto/parking-slot.dto';
 
 @Injectable()
