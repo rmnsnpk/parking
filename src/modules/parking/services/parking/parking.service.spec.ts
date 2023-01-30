@@ -6,7 +6,6 @@ import {
   fakeParkingSlot,
   fakeSlotInfo,
 } from '../../../../../test/mocks/parking/parking.mocks';
-import { SlotInfoDto } from '../../dto/slot-info.dto';
 import { ParkingDBKeys } from '../../enums/parking.enum';
 import { ParkingDataBaseService } from './parking-data-base.service';
 import { ParkingService } from './parking.service';
