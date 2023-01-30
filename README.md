@@ -27,10 +27,10 @@ $ npm run test
 $ npm run test:cov
 ```
 
-##Swagger
+## Swagger
 
 ```bash
 $ npm run start
-'''
-[Go to](http://localhost:3000/api)
 ```
+
+Go to(http://localhost:3000/api)
