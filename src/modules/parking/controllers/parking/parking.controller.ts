@@ -42,7 +42,7 @@ export class ParkingController {
   })
   @ApiBearerAuth('JWT')
   @UseGuards(JwtAuthGuard)
-  @Get('slot::slotId')
+  @Get('slot/:slotId')
   getSlotInfo(
     @Param('slotId', new ParseIntPipe()) slotId: number,
   ): Observable<SlotInfoDto | SlotInfoEmptyDto> {

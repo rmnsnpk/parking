@@ -17,6 +17,7 @@ describe('ParkingDataBaseService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
   it('should find value', () => {
     service.setDefaultValues([fakeParkingSlot]);
     service
@@ -25,9 +26,10 @@ describe('ParkingDataBaseService', () => {
         expect(res).toEqual(fakeParkingSlot);
       });
   });
+
   it('should update value', () => {
     service.setDefaultValues([{ ...fakeParkingSlot, isEmpty: true }]);
-    service.update(fakeParkingSlot).subscribe((res) => {
+    service.update(ParkingDBKeys.ID, fakeParkingSlot).subscribe((res) => {
       expect(res).toEqual(fakeParkingSlot);
     });
   });

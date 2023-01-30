@@ -40,4 +40,14 @@ describe('AuthService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+  it('should return jwt token', () => {
+    service.login(fakeUserWithHashedPassword).subscribe((res) => {
+      expect(res).toEqual(fakeJwtMessage);
+    });
+  });
+  it('should return jwt token', () => {
+    service.signUp(fakeUserWithHashedPassword).subscribe((res) => {
+      expect(res).toEqual(fakeJwtMessage);
+    });
+  });
 });

@@ -17,13 +17,19 @@ export class ParkingService {
   }
 
   public park(license: string): Observable<ParkingSlotDto> {
-    return this.db.findOne(ParkingDBKeys.IS_EMPTY, true).pipe(
+    return this.db.findOne(ParkingDBKeys.LICENSE, license).pipe(
+      switchMap((parkingSlot) => {
+        if (parkingSlot !== null) {
+          throw new HttpException('Car is already parked', HttpStatus.CONFLICT);
+        }
+        return this.db.findOne(ParkingDBKeys.IS_EMPTY, true);
+      }),
       switchMap((parkingSlot) => {
         if (parkingSlot === null) {
           throw new HttpException('No free parking slots', HttpStatus.CONFLICT);
         }
         const bookedParkingSlot = this.bookParkingSlot(parkingSlot, license);
-        return this.db.update(bookedParkingSlot);
+        return this.db.update(ParkingDBKeys.ID, bookedParkingSlot);
       }),
     );
   }
@@ -52,7 +58,7 @@ export class ParkingService {
           throw new HttpException('Not found', HttpStatus.NOT_FOUND);
         }
         const clearedParkingSlot = this.clearParkingSlot(parkingSlot);
-        return this.db.update(clearedParkingSlot).pipe(
+        return this.db.update(ParkingDBKeys.ID, clearedParkingSlot).pipe(
           map((parkingSlot) => {
             return {
               ...parkingSlot,
