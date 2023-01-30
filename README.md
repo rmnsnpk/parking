@@ -26,3 +26,11 @@ $ npm run test
 # test coverage
 $ npm run test:cov
 ```
+
+##Swagger
+
+```bash
+$ npm run start
+'''
+[Go to](http://localhost:3000/api)
+```
